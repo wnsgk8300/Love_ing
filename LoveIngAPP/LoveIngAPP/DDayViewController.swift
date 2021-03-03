@@ -19,10 +19,14 @@ class DDayViewController: UIViewController {
     let datePickerAlertButton = UIButton()
     let dayTextField = UITextField()
     var whatDay = String()
-    
+    var gradientLayer: CAGradientLayer!
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        self.gradientLayer = CAGradientLayer()
+        self.gradientLayer .frame = self.view.bounds
+        self.gradientLayer.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor, UIColor.white.cgColor]
+        self.view.layer.addSublayer(self.gradientLayer)
+
         setMenuTableView()
         setUI()
     }
@@ -48,6 +52,21 @@ class DDayViewController: UIViewController {
         let selectAction = UIAlertAction(title: "Ok", style: .default, handler: { _ in
             let time = dateformatter.string(from: myDatePicker.date)
             let msg = alertController.textFields?[0].text ?? ""
+            
+            var selectedDate = Date()
+            let dateformatter = DateFormatter()
+            dateformatter.dateFormat = "yyyy-MM-dd"
+            let date = dateformatter.string(from: myDatePicker.date)
+            selectedDate = myDatePicker.date
+            let calendar = Calendar.current
+            let date3 = Date()
+            // Replace the hour (time) of both dates with 00:00
+            let date1 = calendar.startOfDay(for: date3)
+            let date2 = calendar.startOfDay(for: selectedDate)
+            let components = calendar.dateComponents([.day], from: date1, to: date2)
+            let dDay = components.day
+            
+            self.dDayArr.append(String(describing: -(dDay ?? 0)))
             self.dayArr.append(msg)
             self.dateArr.append(time)
             self.dDayTableView.reloadData()
@@ -74,7 +93,7 @@ class DDayViewController: UIViewController {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         headerLabel.backgroundColor = .lightGray
-        headerLabel.text = "기념일"
+        headerLabel.text = "    기념일                                                           D-Day"
         datePickerAlertButton.setBackgroundImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         datePickerAlertButton.addTarget(self, action: #selector(datePickerAlert), for: .touchUpInside)
         
@@ -105,9 +124,13 @@ class DDayViewController: UIViewController {
 
 extension DDayViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = ViewController()
         if tableView == menuTableView && indexPath.row == 0 {
             let nextVC = CalculateDDayViewController()
             navigationController?.pushViewController(nextVC, animated: true)
+        }
+        if tableView == dDayTableView {
+            vc.dayLabel.text = "3"
         }
     }
 }
@@ -135,7 +158,7 @@ extension DDayViewController: UITableViewDataSource {
         if tableView == menuTableView {
             guard let menuCell = menuTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                     as? DayTableViewCell else { fatalError() }
-            menuCell.dayLabel.text = menu[indexPath.item]
+            menuCell.dateLabel.text = menu[indexPath.item]
             return menuCell
             
         }

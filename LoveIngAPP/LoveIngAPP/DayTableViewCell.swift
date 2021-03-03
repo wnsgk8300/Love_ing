@@ -32,11 +32,11 @@ class DayTableViewCell: UITableViewCell {
             dateLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 15),
             
             dayLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-            dayLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 88),
+            dayLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 140),
             
             dDayLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             dDayLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            dDayLabel.widthAnchor.constraint(equalToConstant: 40)
+            dDayLabel.widthAnchor.constraint(equalToConstant: 60)
         ])
     }
 }
