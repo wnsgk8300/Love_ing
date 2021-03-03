@@ -114,10 +114,23 @@ extension DDayViewController: UITableViewDelegate {
             navigationController?.pushViewController(nextVC, animated: true)
         }
     }
+   
 }
 
 extension DDayViewController: UITableViewDataSource {
-    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if tableView == dDayTableView {
+            return true
+        } else { return false }
+        
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+       
+        if (editingStyle == .delete) {
+            dDay.remove(at: indexPath.row)
+            dDayTableView.reloadData()
+        }
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if tableView == menuTableView {
