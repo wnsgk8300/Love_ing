@@ -12,12 +12,14 @@ class DDayViewController: UIViewController {
     let menuTableView = UITableView()
     let menu = ["날짜 계산", "테마"]
     let dDayTableView = UITableView()
-    var dDay: [String] = []
+    var dayArr: [String] = []
+    var dateArr: [String] = []
+    var dDayArr: [String] = []
     let headerLabel = UILabel()
     let datePickerAlertButton = UIButton()
     let dayTextField = UITextField()
     var whatDay = String()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -36,32 +38,27 @@ class DDayViewController: UIViewController {
         } else {
             // Fallback on earlier versions
         }
-//           myDatePicker.timeZone = .current
-           myDatePicker.frame = CGRect(x: 0, y: 15, width: 272, height: 200)
-           let alertController = UIAlertController(title: "D-Day 설정", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
-           alertController.view.addSubview(myDatePicker)
+        //           myDatePicker.timeZone = .current
+        myDatePicker.frame = CGRect(x: 0, y: 15, width: 272, height: 200)
+        let alertController = UIAlertController(title: "D-Day 설정", message: "\n\n\n\n\n\n\n\n", preferredStyle: .alert)
+        alertController.view.addSubview(myDatePicker)
         alertController.addTextField { (walletField) in
             walletField.placeholder = "무슨 날인가요?"
         }
         let selectAction = UIAlertAction(title: "Ok", style: .default, handler: { _ in
             let time = dateformatter.string(from: myDatePicker.date)
-            self.dDay.append(self.whatDay + time)
+            let msg = alertController.textFields?[0].text ?? ""
+            self.dayArr.append(msg)
+            self.dateArr.append(time)
             self.dDayTableView.reloadData()
         })
-           let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-           alertController.addAction(selectAction)
-           alertController.addAction(cancelAction)
-           present(alertController, animated: true)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(selectAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
     }
     func setMenuTableView() {
     }
-//    func setDDayTableView() {
-//        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: dDayTableView.frame.width, height: dDayTableView.rowHeight))
-//        headerView.backgroundColor = .blue
-//        dDayTableView.tableHeaderView = headerView
-//        headerView.addSubview(headerLabel)
-//        headerLabel.text = "기념일"
-//    }
     func setUI() {
         [menuTableView, dDayTableView].forEach {
             view.addSubview($0)
@@ -80,7 +77,7 @@ class DDayViewController: UIViewController {
         headerLabel.text = "기념일"
         datePickerAlertButton.setBackgroundImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
         datePickerAlertButton.addTarget(self, action: #selector(datePickerAlert), for: .touchUpInside)
-
+        
         menuTableView.isScrollEnabled = false
         NSLayoutConstraint.activate([
             menuTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -104,7 +101,6 @@ class DDayViewController: UIViewController {
             datePickerAlertButton.heightAnchor.constraint(equalToConstant: 96)
         ])
     }
-    
 }
 
 extension DDayViewController: UITableViewDelegate {
@@ -114,10 +110,10 @@ extension DDayViewController: UITableViewDelegate {
             navigationController?.pushViewController(nextVC, animated: true)
         }
     }
-   
 }
 
 extension DDayViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if tableView == dDayTableView {
             return true
@@ -125,25 +121,30 @@ extension DDayViewController: UITableViewDataSource {
         
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-       
+        
         if (editingStyle == .delete) {
-            dDay.remove(at: indexPath.row)
+            dayArr.remove(at: indexPath.row)
+            dateArr.remove(at: indexPath.row)
+            dDayArr.remove(at: indexPath.row)
             dDayTableView.reloadData()
         }
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if tableView == menuTableView {
             guard let menuCell = menuTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                     as? DayTableViewCell else { fatalError() }
-            menuCell.label.text = menu[indexPath.item]
+            menuCell.dayLabel.text = menu[indexPath.item]
             return menuCell
             
         }
         else {
             guard let dDayCell = menuTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                     as? DayTableViewCell else { fatalError() }
-            dDayCell.label.text = dDay[indexPath.item]
+            dDayCell.dateLabel.text = dateArr[indexPath.item]
+            dDayCell.dayLabel.text = dayArr[indexPath.item]
+            dDayCell.dDayLabel.text = dDayArr[indexPath.item]
             return dDayCell
             
         }
@@ -154,7 +155,7 @@ extension DDayViewController: UITableViewDataSource {
             return menu.count
         }
         else {
-            return dDay.count
+            return dayArr.count
         }
     }
     
