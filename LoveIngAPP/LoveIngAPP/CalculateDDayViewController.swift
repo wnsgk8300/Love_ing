@@ -16,9 +16,13 @@ class CalculateDDayViewController: UIViewController {
     var changedDate = Date()
     var dDay = 0
     let dDayButton = UIButton()
-    
+    var gradientLayer: CAGradientLayer!
     override func viewDidLoad() {
         super.viewDidLoad()
+        gradientLayer = CAGradientLayer()
+        gradientLayer .frame = view.bounds
+        gradientLayer.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor, UIColor.white.cgColor]
+        self.view.layer.addSublayer(gradientLayer)
         view.backgroundColor = .white
         setUI()
         calculateDays()
@@ -85,9 +89,6 @@ class CalculateDDayViewController: UIViewController {
         // Replace the hour (time) of both dates with 00:00
         let date1 = calendar.startOfDay(for: changedDate)
         let date2 = calendar.startOfDay(for: selectedDate)
-        
-        print("\(date), \(selectedDate)")
-        
         let components = calendar.dateComponents([.day], from: date1, to: date2)
         dDay = components.day ?? 0
         resultTextField.text = "\(-(dDay))"

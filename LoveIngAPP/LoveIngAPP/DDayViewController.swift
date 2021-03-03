@@ -56,7 +56,6 @@ class DDayViewController: UIViewController {
             var selectedDate = Date()
             let dateformatter = DateFormatter()
             dateformatter.dateFormat = "yyyy-MM-dd"
-            let date = dateformatter.string(from: myDatePicker.date)
             selectedDate = myDatePicker.date
             let calendar = Calendar.current
             let date3 = Date()
