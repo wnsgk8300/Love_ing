@@ -17,10 +17,16 @@ class DDayViewController: UIViewController {
     let datePickerAlertButton = UIButton()
     let dayTextField = UITextField()
     var whatDay = String()
+    var gradientLayer: CAGradientLayer!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        self.gradientLayer = CAGradientLayer()
+        self.gradientLayer .frame = self.view.bounds
+        self.gradientLayer.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor, UIColor.white.cgColor]
+        self.view.layer.addSublayer(self.gradientLayer)
+
         setMenuTableView()
         setUI()
     }
