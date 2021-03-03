@@ -382,12 +382,6 @@ class ViewController: UIViewController {
         
     }
     
-    
-}
-
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    
     func openLibrary(){
         imagePickerController.sourceType = .photoLibrary
         present(imagePickerController, animated: false, completion: nil)
@@ -408,12 +402,17 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
             print("Camera not available")
         }
     }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    
+   
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-            PhotoImage.image = image
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            albumBtn.setBackgroundImage(image, for: .normal)
         }
-        
         picker.dismiss(animated: true, completion: nil)
     }
     
