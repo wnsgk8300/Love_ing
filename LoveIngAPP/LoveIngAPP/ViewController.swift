@@ -249,8 +249,8 @@ class ViewController: UIViewController {
         
     }
     
-   
-
+    
+    
     
     
     @objc
@@ -386,7 +386,7 @@ class ViewController: UIViewController {
     func openLibrary(){
         imagePickerController.sourceType = .photoLibrary
         present(imagePickerController, animated: false, completion: nil)
-        }
+    }
     
     func openCamera(){
         if(UIImagePickerController .isSourceTypeAvailable(.camera)){
@@ -409,10 +409,12 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            albumBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: albumBtn.bounds.width - albumBtn.bounds.height)
+            albumBtn.imageView?.layer.cornerRadius = albumBtn.bounds.height/2.0
             albumBtn.setImage(image, for: .normal)
         }
         picker.dismiss(animated: true) {
-            <#code#>
+            
         }
     }
     
@@ -439,8 +441,8 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         alert.addAction(camera)
         alert.addAction(cancel)
         present(alert, animated: true, completion: nil)
-            }
-        
+    }
+    
     @objc
     func camera(_ sender: UIButton) {
         let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
