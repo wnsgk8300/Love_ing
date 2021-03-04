@@ -170,8 +170,8 @@ class ViewController: UIViewController {
             
             PhotoImage.topAnchor.constraint(equalTo: DdayLabel.bottomAnchor, constant: 10),
             PhotoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            PhotoImage.heightAnchor.constraint(equalToConstant: 100),
-            PhotoImage.widthAnchor.constraint(equalToConstant: 100)
+            PhotoImage.heightAnchor.constraint(equalToConstant: 120),
+            PhotoImage.widthAnchor.constraint(equalToConstant: 120)
             
         ])
         
@@ -192,6 +192,7 @@ class ViewController: UIViewController {
         dateLabel.addGestureRecognizer(tapGesture)
         
         PhotoImage.backgroundColor = .white
+        PhotoImage.layer.cornerRadius = 60
         
         DdayLabel.text = "♡ - 0"
         DdayLabel.font = UIFont.boldSystemFont(ofSize: 20)
@@ -217,7 +218,7 @@ class ViewController: UIViewController {
         dayLabel.textColor = .lightGray
         
         cameraBtn.backgroundColor = .lightGray
-        cameraBtn.addTarget(self, action: #selector(album(_:)), for: .touchUpInside)
+        cameraBtn.addTarget(self, action: #selector(camera(_:)), for: .touchUpInside)
         cameraBtn.layer.cornerRadius = 60
         cameraBtn.setImage(UIImage(systemName: "person.crop.circle.badge.plus"), for: .normal)
         
@@ -406,23 +407,42 @@ class ViewController: UIViewController {
 
 extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    
-   
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            albumBtn.setBackgroundImage(image, for: .normal)
+            albumBtn.setImage(image, for: .normal)
         }
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true) {
+            <#code#>
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
+        picker.dismiss(animated: true) {
+        }
     }
     
     
     @objc
     func album(_ sender: UIButton) {
+        let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
+        
+        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
+        }
+        
+        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
+            self.openCamera()
+        }
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        alert.addAction(library)
+        alert.addAction(camera)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+            }
+        
+    @objc
+    func camera(_ sender: UIButton) {
         let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
         
         let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
