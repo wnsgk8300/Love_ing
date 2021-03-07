@@ -12,6 +12,8 @@ import Photos
 
 class ViewController: UIViewController {
     
+    var value = 0
+    
     let datePicker = UIDatePicker()
     let dateLabel = UILabel()
     let headLabel = UILabel()
@@ -22,8 +24,8 @@ class ViewController: UIViewController {
     let DdayLabel = UILabel()
     let PhotoImage = UIImageView()
     let imagePickerController = UIImagePickerController()
-    let cameraBtn = UIButton()
-    let albumBtn = UIButton()
+    let person1Btn = UIButton()
+    let person2Btn = UIButton()
     var flagImageSave = true
     let calendar = Calendar.current
     let dateFormatter = DateFormatter()
@@ -128,7 +130,7 @@ class ViewController: UIViewController {
     
     
     func setLayout() {
-        [dateLabel, cameraBtn, albumBtn, DdayLabel, person1, person2, headLabel, backLabel, dayLabel, PhotoImage].forEach { (view) in
+        [dateLabel, person1Btn, person2Btn, DdayLabel, person1, person2, headLabel, backLabel, dayLabel, PhotoImage].forEach { (view) in
             self.view.addSubview(view)
             view.alpha = 0
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -149,21 +151,21 @@ class ViewController: UIViewController {
             backLabel.topAnchor.constraint(equalTo: dayLabel.bottomAnchor, constant: 20),
             backLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            cameraBtn.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 200),
-            cameraBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            cameraBtn.heightAnchor.constraint(equalToConstant: 120),
-            cameraBtn.widthAnchor.constraint(equalToConstant: 120),
+            person1Btn.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 200),
+            person1Btn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            person1Btn.heightAnchor.constraint(equalToConstant: 120),
+            person1Btn.widthAnchor.constraint(equalToConstant: 120),
             
-            albumBtn.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 200),
-            albumBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-            albumBtn.heightAnchor.constraint(equalToConstant: 120),
-            albumBtn.widthAnchor.constraint(equalToConstant: 120),
+            person2Btn.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 200),
+            person2Btn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            person2Btn.heightAnchor.constraint(equalToConstant: 120),
+            person2Btn.widthAnchor.constraint(equalToConstant: 120),
             
-            person1.topAnchor.constraint(equalTo: cameraBtn.bottomAnchor, constant: 20),
-            person1.centerXAnchor.constraint(equalTo: cameraBtn.centerXAnchor),
+            person1.topAnchor.constraint(equalTo: person1Btn.bottomAnchor, constant: 20),
+            person1.centerXAnchor.constraint(equalTo: person1Btn.centerXAnchor),
             
-            person2.topAnchor.constraint(equalTo: albumBtn.bottomAnchor, constant: 20),
-            person2.centerXAnchor.constraint(equalTo: albumBtn.centerXAnchor),
+            person2.topAnchor.constraint(equalTo: person2Btn.bottomAnchor, constant: 20),
+            person2.centerXAnchor.constraint(equalTo: person2Btn.centerXAnchor),
             
             DdayLabel.topAnchor.constraint(equalTo: person1.bottomAnchor, constant: 30),
             DdayLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -217,15 +219,17 @@ class ViewController: UIViewController {
         dayLabel.font = UIFont.boldSystemFont(ofSize: 30)
         dayLabel.textColor = .lightGray
         
-        cameraBtn.backgroundColor = .lightGray
-        cameraBtn.addTarget(self, action: #selector(camera(_:)), for: .touchUpInside)
-        cameraBtn.layer.cornerRadius = 60
-        cameraBtn.setImage(UIImage(systemName: "person.crop.circle.badge.plus"), for: .normal)
+        person1Btn.backgroundColor = .lightGray
+        person1Btn.addTarget(self, action: #selector(album(_:)), for: .touchUpInside)
+        person1Btn.layer.cornerRadius = 60
+        person1Btn.tag = 1
+        person1Btn.setImage(UIImage(systemName: "person.crop.circle.badge.plus"), for: .normal)
         
-        albumBtn.backgroundColor = .lightGray
-        albumBtn.addTarget(self, action: #selector(album(_:)), for: .touchUpInside)
-        albumBtn.layer.cornerRadius = 60
-        albumBtn.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
+        person2Btn.backgroundColor = .lightGray
+        person2Btn.addTarget(self, action: #selector(camera(_:)), for: .touchUpInside)
+        person2Btn.layer.cornerRadius = 60
+        person2Btn.tag = 2
+        person2Btn.setImage(UIImage(systemName: "person.crop.circle.fill.badge.plus"), for: .normal)
         
         let tapGestureRecognizerPerson1 = UITapGestureRecognizer(target: self, action: #selector(FirstPersonTapped))
         tapGestureRecognizerPerson1.numberOfTouchesRequired = 1
@@ -262,7 +266,7 @@ class ViewController: UIViewController {
         self.datePicker.addTarget(self, action: #selector(self.changed), for: .valueChanged)
         UIView.animate(withDuration: 3) {
             
-            [self.dateLabel, self.cameraBtn, self.albumBtn, self.DdayLabel, self.person1, self.person2, self.headLabel, self.backLabel, self.dayLabel, self.PhotoImage].forEach { (view) in
+            [self.dateLabel, self.person1Btn, self.person2Btn, self.DdayLabel, self.person1, self.person2, self.headLabel, self.backLabel, self.dayLabel, self.PhotoImage].forEach { (view) in
                 self.view.addSubview(view)
                 view.alpha = 1
             }
@@ -385,6 +389,7 @@ class ViewController: UIViewController {
     
     func openLibrary(){
         imagePickerController.sourceType = .photoLibrary
+        imagePickerController.allowsEditing = false
         present(imagePickerController, animated: false, completion: nil)
     }
     
@@ -408,13 +413,24 @@ class ViewController: UIViewController {
 extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            albumBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: albumBtn.bounds.width - albumBtn.bounds.height)
-            albumBtn.imageView?.layer.cornerRadius = albumBtn.bounds.height/2.0
-            albumBtn.setImage(image, for: .normal)
-        }
-        picker.dismiss(animated: true) {
+        if let Image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            if value == 1 {
+                print("123")
+                person1Btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: person1Btn.bounds.width - person1Btn.bounds.height)
+                person1Btn.imageView?.layer.cornerRadius = person1Btn.bounds.height/2.0
+                person1Btn.setImage(Image, for: .normal)
+            } else if value == 2 {
+                print("456")
+                person2Btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: person2Btn.bounds.width - person2Btn.bounds.height)
+                person2Btn.imageView?.layer.cornerRadius = person2Btn.bounds.height/2.0
+                person2Btn.setImage(Image, for: .normal)
+                
+                
+            }
             
+            picker.dismiss(animated: true) {
+                
+            }
         }
     }
     
@@ -426,6 +442,8 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     
     @objc
     func album(_ sender: UIButton) {
+        value = 1
+        
         let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
         
         let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
@@ -445,6 +463,8 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
     
     @objc
     func camera(_ sender: UIButton) {
+        value = 2
+        
         let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
         
         let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
@@ -460,9 +480,8 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         alert.addAction(camera)
         alert.addAction(cancel)
         present(alert, animated: true, completion: nil)
-        
-        
     }
+    
 }
 
 
