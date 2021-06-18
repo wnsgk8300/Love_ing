@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Love_ing-ios
 
 기념일, D-day를 저장하고 날짜를 계산해 주고 더 나아가 앨범에 있는 사진과 카메라 기능을 추가하여 사진을 직접 설정할 수 있는 애플리케이션을 만들었습니다.
@@ -55,3 +56,6 @@
 ## 상세 Setting
 
 <img width="192" alt="스크린샷 2021-06-16 오전 12 32 54" src="https://user-images.githubusercontent.com/76473014/122082415-f348ed80-ce3a-11eb-9e99-a768e57ce463.png" width="180" height="310" > <img width="192" alt="스크린샷 2021-06-16 오전 12 33 13" src="https://user-images.githubusercontent.com/76473014/122082418-f3e18400-ce3a-11eb-8584-4a8ebd7e8864.png" width="180" height="310" > <img width="192" alt="스크린샷 2021-06-16 오전 12 33 21" src="https://user-images.githubusercontent.com/76473014/122082422-f512b100-ce3a-11eb-9c09-ba459136fade.png" width="180" height="310" >
+=======
+
+>>>>>>> 939d004874b79dda887a5241d37ae8f6545085e6

@@ -147,38 +147,7 @@ extension SettingViewController: UITableViewDelegate {
             viewTextField.placeholder = VC.person2.text
             viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
         }
-        
-//        switch data[indexPath.section][indexPath.row] {
-//
-//        case "사람1":
-//            viewLabel.text = "사람1을 변경해 주세요"
-//            viewTextField.placeholder = VC.person1.text
-//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-//
-//        case "사람2":
-//            viewTextField.placeholder = VC.person2.text
-//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-//
-//        case "위 문구 변경":
-//            viewLabel.text = "위 문구를 변경해 주세요"
-//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-//
-//
-//        case "아래 문구 변경":
-//            viewLabel.text = "아래 문구를 변경해 주세요"
-//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-//
-//
-//        case "시작일":
-//            viewLabel.text = "시작일을 변경해 주세요"
-//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-//
-//
-//
-//
-//        default:
-//            break
-//        }
+
         
         }
     
