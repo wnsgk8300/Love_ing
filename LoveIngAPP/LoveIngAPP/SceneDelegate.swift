@@ -54,7 +54,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 extension UITabBar {
-    
     static func setTransparentTabbar() {
         UITabBar.appearance().backgroundImage = UIImage()
         UITabBar.appearance().shadowImage     = UIImage()
@@ -63,10 +62,9 @@ extension UITabBar {
 } // 텝바 투명하게 처리
 
 extension UINavigationBar {
-    
     static func setTransparentTabbar() {
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
         UINavigationBar.appearance().shadowImage     = UIImage()
         UINavigationBar.appearance().clipsToBounds   = true
-    } // 네비게이션바 투명하게 처리
+    }
 }

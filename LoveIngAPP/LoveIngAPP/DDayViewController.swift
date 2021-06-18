@@ -130,6 +130,8 @@ extension DDayViewController: UITableViewDelegate {
         } else if tableView == menuTableView && indexPath.row == 1 {
             let notReadyAlert = UIAlertController(title: "", message: "기능을 준비중입니다.", preferredStyle: .alert)
             let cancelAction = UIAlertAction(title: "확인", style: .cancel, handler: nil)
+
+            
             notReadyAlert.addAction(cancelAction)
             present(notReadyAlert, animated: true)
         }

@@ -130,15 +130,13 @@ class ViewController: UIViewController {
     
     
     func setLayout() {
-        [dateLabel, person1Btn, person2Btn, DdayLabel, person1, person2, headLabel, backLabel, dayLabel, PhotoImage].forEach { (view) in
+        [dateLabel, person1Btn, person2Btn, DdayLabel, person1, person2, headLabel, backLabel, dayLabel].forEach { (view) in
             self.view.addSubview(view)
             view.alpha = 0
             view.translatesAutoresizingMaskIntoConstraints = false
         }
         
         NSLayoutConstraint.activate ([
-            
-            
             dateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             dateLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
             
@@ -169,11 +167,6 @@ class ViewController: UIViewController {
             
             DdayLabel.topAnchor.constraint(equalTo: person1.bottomAnchor, constant: 30),
             DdayLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            PhotoImage.topAnchor.constraint(equalTo: DdayLabel.bottomAnchor, constant: 10),
-            PhotoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            PhotoImage.heightAnchor.constraint(equalToConstant: 120),
-            PhotoImage.widthAnchor.constraint(equalToConstant: 120)
             
         ])
         
@@ -265,7 +258,6 @@ class ViewController: UIViewController {
         }
         self.datePicker.addTarget(self, action: #selector(self.changed), for: .valueChanged)
         UIView.animate(withDuration: 3) {
-            
             [self.dateLabel, self.person1Btn, self.person2Btn, self.DdayLabel, self.person1, self.person2, self.headLabel, self.backLabel, self.dayLabel, self.PhotoImage].forEach { (view) in
                 self.view.addSubview(view)
                 view.alpha = 1

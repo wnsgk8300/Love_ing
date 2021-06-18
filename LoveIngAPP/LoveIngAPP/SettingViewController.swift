@@ -29,7 +29,7 @@ class SettingViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         gradientLayer = CAGradientLayer()
-        gradientLayer .frame = view.bounds
+        gradientLayer.frame = view.bounds
         gradientLayer.colors = [UIColor.systemPurple.cgColor, UIColor.systemPink.cgColor, UIColor.white.cgColor]
         self.view.layer.addSublayer(gradientLayer)
         
@@ -117,6 +117,8 @@ extension SettingViewController: UITableViewDelegate {
             
         ])
         
+       
+        
         firstView.layer.cornerRadius = 30
         firstView.backgroundColor = .white
         firstView.alpha = 1
@@ -129,51 +131,56 @@ extension SettingViewController: UITableViewDelegate {
         viewLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         viewLabel.textColor = .darkGray
         
-        viewTextField.borderStyle = .line
-        let border = CALayer()
-        viewTextField.layer.addSublayer((border))
-        viewTextField.textAlignment = .left
-        viewTextField.textColor = UIColor.black
-        viewTextField.autocapitalizationType = .none
+        
+        
         
         viewButton.backgroundColor = .lightGray
         viewButton.setTitle("확인", for: .normal)
         viewButton.setTitleColor(.black, for: .normal)
         viewButton.layer.cornerRadius = 10
         
-        switch data[indexPath.section][indexPath.row] {
-        
-        case "사람1":
+        if tableView == self.tableView && indexPath.row == 0 {
             viewLabel.text = "사람1을 변경해 주세요"
             viewTextField.placeholder = VC.person1.text
             viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-            
-        case "사람2":
+        } else if tableView == self.tableView && indexPath.row == 1 {
             viewTextField.placeholder = VC.person2.text
             viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-            
-        case "위 문구 변경":
-            viewLabel.text = "위 문구를 변경해 주세요"
-            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-            
-            
-        case "아래 문구 변경":
-            viewLabel.text = "아래 문구를 변경해 주세요"
-            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-            
-            
-        case "시작일":
-            viewLabel.text = "시작일을 변경해 주세요"
-            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
-            
-            
-            
-            
-        default:
-            break
         }
         
-    }
+//        switch data[indexPath.section][indexPath.row] {
+//
+//        case "사람1":
+//            viewLabel.text = "사람1을 변경해 주세요"
+//            viewTextField.placeholder = VC.person1.text
+//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
+//
+//        case "사람2":
+//            viewTextField.placeholder = VC.person2.text
+//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
+//
+//        case "위 문구 변경":
+//            viewLabel.text = "위 문구를 변경해 주세요"
+//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
+//
+//
+//        case "아래 문구 변경":
+//            viewLabel.text = "아래 문구를 변경해 주세요"
+//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
+//
+//
+//        case "시작일":
+//            viewLabel.text = "시작일을 변경해 주세요"
+//            viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
+//
+//
+//
+//
+//        default:
+//            break
+//        }
+        
+        }
     
     @objc
     func handleButton(_ sender: UIButton) {
@@ -214,6 +221,7 @@ extension SettingViewController: UITableViewDataSource {
     }
     
 }
+
 
 protocol SettingViewControllerDelegate: class {
     func textFieldInput(text:String) //여기서 함수 구현 못한다 채택에서 해줘야됨
