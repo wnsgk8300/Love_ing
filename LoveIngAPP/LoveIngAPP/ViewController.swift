@@ -13,7 +13,6 @@ import Photos
 class ViewController: UIViewController {
     
     var value = 0
-    
     let datePicker = UIDatePicker()
     let dateLabel = UILabel()
     let headLabel = UILabel()
@@ -40,7 +39,6 @@ class ViewController: UIViewController {
         
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,8 +55,192 @@ class ViewController: UIViewController {
         setLayout()
         setDate()
         setFirstView()
+    }
+}
+
+extension ViewController {
+    
+    @objc
+    func closeButton(_ sender: UIButton) {
+        [firstView, viewButton, viewLabel, datePicker, circleView].forEach { (view) in
+            view.isHidden = true
+        }
+        self.datePicker.addTarget(self, action: #selector(self.changed), for: .valueChanged)
+        UIView.animate(withDuration: 3) {
+            [self.dateLabel, self.person1Btn, self.person2Btn, self.DdayLabel, self.person1, self.person2, self.headLabel, self.backLabel, self.dayLabel, self.PhotoImage].forEach { (view) in
+                self.view.addSubview(view)
+                view.alpha = 1
+            }
+            self.headLabel.font = UIFont.boldSystemFont(ofSize: 20)
+            self.headLabel.frame.origin.x -= -90
+            self.backLabel.font = UIFont.boldSystemFont(ofSize: 20)
+            self.backLabel.frame.origin.x -= +90
+            self.dateLabel.font = UIFont.boldSystemFont(ofSize: 40)
+            self.dateLabel.frame.origin.y -= -80
+        }
+    }
+    
+    
+    @objc
+    func viewMapTapped(sender: UITapGestureRecognizer) {
+        let alert = UIAlertController(title: "문구를 변경해 주세요", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = self.headLabel.text
+        }
+        
+        let action = UIAlertAction(title: "확인", style: .default) { _ in
+            self.headLabel.text = alert.textFields?[0].text
+            if alert.textFields?[0].text == "" {
+                self.headLabel.text = "코딩한지"
+            }
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @objc
+    func FirstPersonTapped(sender: UITapGestureRecognizer) {
+        let alert = UIAlertController(title: "문구를 변경해 주세요", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = self.person1.text
+        }
+        
+        let action = UIAlertAction(title: "확인", style: .default) { _ in
+            self.person1.text = alert.textFields?[0].text
+            if alert.textFields?[0].text == "" {
+                self.person1.text = "사람1"
+            }
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @objc
+    func secondPersonTapped(sender: UITapGestureRecognizer) {
+        let alert = UIAlertController(title: "문구를 변경해 주세요", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = self.person2.text
+        }
+        
+        let action = UIAlertAction(title: "확인", style: .default) { _ in
+            self.person2.text = alert.textFields?[0].text
+            if alert.textFields?[0].text == "" {
+                self.person2.text = "사람2"
+            }
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @objc
+    func handleBarButton(_ sender: UIBarButtonItem) {
+        navigationController?.pushViewController(SettingViewController(), animated: true)
+    }
+    
+    @objc
+    func handleTap(sender: UITapGestureRecognizer) {
+        
+        if #available(iOS 14, *) {
+            datePicker.preferredDatePickerStyle = .automatic
+        }
+        
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(changed), for: .valueChanged)
         
     }
+    
+    @objc
+    func changed() {
+        var selectedDate = Date()
+        let dateformatter = DateFormatter()
+        //        dateformatter.dateStyle = .medium //
+        //        dateformatter.timeStyle = .none // 시간 사용시에 변경
+        dateformatter.locale = Locale(identifier: "ko") // 로케일 변경
+        dateformatter.dateFormat = "♡ yyyy-MM-dd ♡"
+        let date = dateformatter.string(from: datePicker.date)
+        dateLabel.text = date
+        selectedDate = datePicker.date
+        
+        let calendar = Calendar.current
+        let date3 = Date()
+        let date1 = calendar.startOfDay(for: date3)
+        let date2 = calendar.startOfDay(for: selectedDate)
+        
+        print("\(date), \(selectedDate)")
+        
+        let components = calendar.dateComponents([.day], from: date1, to: date2)
+        let dDay = components.day
+        dayLabel.text = "\(-(dDay ?? 0)) 일"
+        DdayLabel.text = "♡\(-(dDay ?? 0))"
+        let dayLeft = (dDay ?? 0) + 100
+        if dDay ?? 0 <= 1 {
+            DdayLabel.text = "100일까지 \(dayLeft)일 남았습니다."
+        }
+    }
+    @objc
+    func album(_ sender: UIButton) {
+        value = 1
+        
+        let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
+        
+        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
+        }
+        
+        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
+            self.openCamera()
+        }
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alert.addAction(library)
+        alert.addAction(camera)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @objc
+    func camera(_ sender: UIButton) {
+        value = 2
+        
+        let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
+        
+        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
+        }
+        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
+            self.openCamera()
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        alert.addAction(library)
+        alert.addAction(camera)
+        alert.addAction(cancel)
+        present(alert, animated: true, completion: nil)
+    }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let Image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            if value == 1 {
+                print("123")
+                person1Btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: person1Btn.bounds.width - person1Btn.bounds.height)
+                person1Btn.imageView?.layer.cornerRadius = person1Btn.bounds.height/2.0
+                person1Btn.setImage(Image, for: .normal)
+            } else if value == 2 {
+                print("456")
+                person2Btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: person2Btn.bounds.width - person2Btn.bounds.height)
+                person2Btn.imageView?.layer.cornerRadius = person2Btn.bounds.height/2.0
+                person2Btn.setImage(Image, for: .normal)
+            }
+            picker.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ViewController {
     
     func setFirstView() {
         
@@ -105,11 +287,6 @@ class ViewController: UIViewController {
         firstView.backgroundColor = .white
         firstView.alpha = 1
         
-        //        이미지 적용 안 됨ㅇ
-        //        let image = UIImage(named: "pencil.circle")
-        //        let iv1 = UIImageView(image: image)
-        //        circleView.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
-        //        circleView.addSubview(iv1)
         circleView.layer.cornerRadius = 40
         circleView.backgroundColor = .systemPink
         circleView.layer.borderColor = UIColor.white.cgColor
@@ -167,11 +344,9 @@ class ViewController: UIViewController {
             
             DdayLabel.topAnchor.constraint(equalTo: person1.bottomAnchor, constant: 30),
             DdayLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
         ])
         
     }
-    
     
     func setDate() {
         
@@ -202,7 +377,6 @@ class ViewController: UIViewController {
         headLabel.textColor = .white
         headLabel.addGestureRecognizer(tapGestureRecognizer)
         headLabel.isUserInteractionEnabled = true
-        
         
         backLabel.text = "되었습니다."
         backLabel.font = UIFont.boldSystemFont(ofSize: 0)
@@ -243,149 +417,15 @@ class ViewController: UIViewController {
         person2.textColor = .white
         person2.addGestureRecognizer(tapGestureRecognizerPerson2)
         person2.isUserInteractionEnabled = true
-        
     }
     
-    
-    
-    
-    
-    @objc
-    func closeButton(_ sender: UIButton) {
-        
-        [firstView, viewButton, viewLabel, datePicker, circleView].forEach { (view) in
-            view.isHidden = true
-        }
-        self.datePicker.addTarget(self, action: #selector(self.changed), for: .valueChanged)
-        UIView.animate(withDuration: 3) {
-            [self.dateLabel, self.person1Btn, self.person2Btn, self.DdayLabel, self.person1, self.person2, self.headLabel, self.backLabel, self.dayLabel, self.PhotoImage].forEach { (view) in
-                self.view.addSubview(view)
-                view.alpha = 1
-            }
-            self.headLabel.font = UIFont.boldSystemFont(ofSize: 20)
-            self.headLabel.frame.origin.x -= -90
-            self.backLabel.font = UIFont.boldSystemFont(ofSize: 20)
-            self.backLabel.frame.origin.x -= +90
-            self.dateLabel.font = UIFont.boldSystemFont(ofSize: 40)
-            self.dateLabel.frame.origin.y -= -80
-        }
-        
-    }
-    
-    
-    @objc
-    func viewMapTapped(sender: UITapGestureRecognizer) {
-        let alert = UIAlertController(title: "문구를 변경해 주세요", message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.placeholder = self.headLabel.text
-        }
-        
-        let action = UIAlertAction(title: "확인", style: .default) { _ in
-            self.headLabel.text = alert.textFields?[0].text
-            if alert.textFields?[0].text == "" {
-                self.headLabel.text = "코딩한지"
-            }
-        }
-        
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @objc
-    func FirstPersonTapped(sender: UITapGestureRecognizer) {
-        let alert = UIAlertController(title: "문구를 변경해 주세요", message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.placeholder = self.person1.text
-        }
-        
-        let action = UIAlertAction(title: "확인", style: .default) { _ in
-            self.person1.text = alert.textFields?[0].text
-            if alert.textFields?[0].text == "" {
-                self.person1.text = "사람1"
-            }
-        }
-        
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @objc
-    func secondPersonTapped(sender: UITapGestureRecognizer) {
-        let alert = UIAlertController(title: "문구를 변경해 주세요", message: nil, preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.placeholder = self.person2.text
-        }
-        
-        let action = UIAlertAction(title: "확인", style: .default) { _ in
-            self.person2.text = alert.textFields?[0].text
-            if alert.textFields?[0].text == "" {
-                self.person2.text = "사람2"
-            }
-        }
-        
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    
-    @objc
-    func handleBarButton(_ sender: UIBarButtonItem) {
-        navigationController?.pushViewController(SettingViewController(), animated: true)
-    }
-    
-    
-    @objc
-    func handleTap(sender: UITapGestureRecognizer) {
-        
-        if #available(iOS 14, *) {
-            datePicker.preferredDatePickerStyle = .automatic
-        }
-        
-        datePicker.datePickerMode = .date
-        datePicker.addTarget(self, action: #selector(changed), for: .valueChanged)
-        
-    }
-    
-    var selectedDate = Date()
-    let resultTextField = UITextField()
-    
-    @objc
-    func changed(){
-        let dateformatter = DateFormatter()
-        //        dateformatter.dateStyle = .medium //
-        //        dateformatter.timeStyle = .none // 시간 사용시에 변경
-        dateformatter.locale = Locale(identifier: "ko") // 로케일 변경
-        dateformatter.dateFormat = "♡ yyyy-MM-dd ♡"
-        let date = dateformatter.string(from: datePicker.date)
-        dateLabel.text = date
-        selectedDate = datePicker.date
-        
-        let calendar = Calendar.current
-        let date3 = Date()
-        let date1 = calendar.startOfDay(for: date3)
-        let date2 = calendar.startOfDay(for: selectedDate)
-        
-        print("\(date), \(selectedDate)")
-        
-        let components = calendar.dateComponents([.day], from: date1, to: date2)
-        let dDay = components.day
-        dayLabel.text = "\(-(dDay ?? 0)) 일"
-        DdayLabel.text = "♡\(-(dDay ?? 0))"
-        let dayLeft = (dDay ?? 0) + 100
-        if dDay ?? 0 <= 1 {
-            DdayLabel.text = "100일까지 \(dayLeft)일 남았습니다."
-        }
-        
-        
-    }
-    
-    func openLibrary(){
+    func openLibrary() {
         imagePickerController.sourceType = .photoLibrary
         imagePickerController.allowsEditing = false
         present(imagePickerController, animated: false, completion: nil)
     }
     
-    func openCamera(){
+    func openCamera() {
         if(UIImagePickerController .isSourceTypeAvailable(.camera)){
             imagePickerController.sourceType = .camera
             imagePickerController.allowsEditing = true
@@ -394,87 +434,10 @@ class ViewController: UIViewController {
             imagePickerController.cameraCaptureMode = .photo
             imagePickerController.delegate = self
             present(imagePickerController, animated: true, completion: nil)
-            
         }
-        else{
+        else {
             print("Camera not available")
         }
     }
 }
-
-extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let Image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            if value == 1 {
-                print("123")
-                person1Btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: person1Btn.bounds.width - person1Btn.bounds.height)
-                person1Btn.imageView?.layer.cornerRadius = person1Btn.bounds.height/2.0
-                person1Btn.setImage(Image, for: .normal)
-            } else if value == 2 {
-                print("456")
-                person2Btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: person2Btn.bounds.width - person2Btn.bounds.height)
-                person2Btn.imageView?.layer.cornerRadius = person2Btn.bounds.height/2.0
-                person2Btn.setImage(Image, for: .normal)
-                
-                
-            }
-            
-            picker.dismiss(animated: true) {
-                
-            }
-        }
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true) {
-        }
-    }
-    
-    
-    @objc
-    func album(_ sender: UIButton) {
-        value = 1
-        
-        let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
-        
-        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
-        }
-        
-        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
-            self.openCamera()
-        }
-        
-        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        
-        alert.addAction(library)
-        alert.addAction(camera)
-        alert.addAction(cancel)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @objc
-    func camera(_ sender: UIButton) {
-        value = 2
-        
-        let alert =  UIAlertController(title: "이미지를 바꿔주세요", message: "", preferredStyle: .actionSheet)
-        
-        let library =  UIAlertAction(title: "사진앨범", style: .default) { (action) in self.openLibrary()
-        }
-        
-        let camera =  UIAlertAction(title: "카메라", style: .default) { (action) in
-            self.openCamera()
-        }
-        
-        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
-        
-        alert.addAction(library)
-        alert.addAction(camera)
-        alert.addAction(cancel)
-        present(alert, animated: true, completion: nil)
-    }
-    
-}
-
-
 

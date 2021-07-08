@@ -45,33 +45,9 @@ class SettingViewController: UIViewController, UITextFieldDelegate {
         navigationController?.navigationBar.topItem?.title = "Setting"
         viewTextField.delegate = self
         
-        
         setTableView()
         setUI()
-        
     }
-    
-    func setTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: "SettingTableViewCell")
-        tableView.rowHeight = 50
-        tableView.separatorInset.right = 20 // 셀 나눠주는 선 끝부분 공백
-    }
-    
-    func setUI() {
-        view.addSubview(tableView)
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-    }
-    
 }
 
 extension SettingViewController: UITableViewDelegate {
@@ -90,7 +66,6 @@ extension SettingViewController: UITableViewDelegate {
             view.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(view)
         }
-        
         NSLayoutConstraint.activate([
             
             firstView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -114,10 +89,7 @@ extension SettingViewController: UITableViewDelegate {
             viewTextField.centerXAnchor.constraint(equalTo: self.firstView.centerXAnchor),
             viewTextField.centerYAnchor.constraint(equalTo: self.firstView.centerYAnchor),
             viewTextField.widthAnchor.constraint(equalToConstant: 200)
-            
         ])
-        
-       
         
         firstView.layer.cornerRadius = 30
         firstView.backgroundColor = .white
@@ -130,9 +102,6 @@ extension SettingViewController: UITableViewDelegate {
         
         viewLabel.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         viewLabel.textColor = .darkGray
-        
-        
-        
         
         viewButton.backgroundColor = .lightGray
         viewButton.setTitle("확인", for: .normal)
@@ -147,37 +116,17 @@ extension SettingViewController: UITableViewDelegate {
             viewTextField.placeholder = VC.person2.text
             viewButton.addTarget(self, action: #selector(handleButton(_:)), for: .touchUpInside)
         }
-
-        
-        }
-    
-    @objc
-    func handleButton(_ sender: UIButton) {
-        
-        [firstView, viewButton, viewLabel,viewTextField, circleView].forEach { (view) in
-            view.isHidden = true
-        }
-        guard let text = viewTextField.text else {return}
-        viewTextField.delegate = self
-        self.delegate?.textFieldInput(text: "abcd")
-        
-        //        let VC = ViewController()
-        //        VC.person1.text = viewTextField.text
-        //        dismiss(animated: true, completion: nil)
-        
     }
-    
 }
 
-
-
 extension SettingViewController: UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 20
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
-    } // 섹션 왜 안 나눠짐? ㅡㅡ
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data[section].count
@@ -191,6 +140,46 @@ extension SettingViewController: UITableViewDataSource {
     
 }
 
+extension SettingViewController {
+    @objc
+    func handleButton(_ sender: UIButton) {
+        
+        [firstView, viewButton, viewLabel,viewTextField, circleView].forEach { (view) in
+            view.isHidden = true
+        }
+        guard let text = viewTextField.text else {return}
+        viewTextField.delegate = self
+        self.delegate?.textFieldInput(text: "abcd")
+        
+        //        let VC = ViewController()
+        //        VC.person1.text = viewTextField.text
+        //        dismiss(animated: true, completion: nil)
+    }
+}
+
+extension SettingViewController {
+    
+    func setTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: "SettingTableViewCell")
+        tableView.rowHeight = 50
+        tableView.separatorInset.right = 20 // 셀 나눠주는 선 끝부분 공백
+    }
+    
+    func setUI() {
+        view.addSubview(tableView)
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+    }
+}
 
 protocol SettingViewControllerDelegate: class {
     func textFieldInput(text:String) //여기서 함수 구현 못한다 채택에서 해줘야됨
